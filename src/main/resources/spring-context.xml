@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd"
+	default-autowire="byName" default-lazy-init="true">
+	<!-- 扫描所有业务层组件 -->
+	<context:component-scan base-package="com.panchao.ssmtest.service"></context:component-scan>
+	<!-- c3p0数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/test"></property>
+		<property name="user" value="test"></property>
+		<property name="password" value="888888"></property>
+		<property name="minPoolSize" value="1"></property>
+		<property name="maxPoolSize" value="5"></property>
+		<property name="initialPoolSize" value="1"></property>
+		<property name="acquireIncrement" value="1"></property>
+	</bean>
+
+	<!-- 配置数据源事务管理DataSourceTransactionManager -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 指定通过注解控制事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- spring和MyBatis完美整合 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 指定数据源 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 具体指定xml文件，可不配 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 自动扫描mapping.xml文件，**表示迭代查找 -->
+		<property name="mapperLocations" value="classpath:mapper/*.xml" />
+	</bean>
+
+	<!-- 自动扫描com.panchao.ssmtest.dao下的所有dao接口，并实现这些接口，可直接在程序中使用dao接口，不用再获取sqlsession对象 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- basePackage 属性是映射器接口文件的包路径。 你可以使用分号或逗号 作为分隔符设置多于一个的包路径 -->
+		<property name="basePackage" value="com.panchao.ssmtest.dao" />
+		<!-- 因为会自动装配 SqlSessionFactory和SqlSessionTemplate 所以没 有 必 要 去 指 定 SqlSessionFactory或 
+			SqlSessionTemplate 因此可省略不配置； 但是,如果你使 用了一个 以上的 DataSource，那么自动装配可能会失效。 这种 
+			情况下，你可以使用sqlSessionFactoryBeanName或sqlSessionTemplateBeanName属性来设置正确的 bean名称来使用； -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+</beans>
