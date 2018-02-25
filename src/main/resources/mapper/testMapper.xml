@@ -2,5 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.panchao.ssmtest.dao.TestMapper">
-	
+	<select id="selectTest" resultType="com.panchao.ssmtest.entity.Test">
+		select * from test
+	</select>
 </mapper> 
