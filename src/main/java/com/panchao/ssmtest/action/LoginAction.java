@@ -20,14 +20,14 @@ public class LoginAction {
 	private ITestService testService;
 	@RequestMapping("/LoginAction.login.do")
 	public String login(HttpServletRequest request, HttpServletResponse response) {
-		logger.info("------------------------------Log4j²âÊÔ¿ªÊ¼......----------------------------------");
+		logger.info("------------------------------Log4jæµ‹è¯•å¼€å§‹......----------------------------------");
 		List<Test> list = testService.selectTest();
 		for (Test test : list) {
 			System.out.println(test);
 		}
-		logger.error("-------------------²âÊÔerror---------------------");
-		System.out.println("ÎÒßMíÁË!");
-		logger.info("------------------------------Log4j²âÊÔ½áÊø----------------------------------");
+		logger.error("-------------------æµ‹è¯•error---------------------");
+		System.out.println("æˆ‘é€²ä¾†äº†!");
+		logger.info("------------------------------Log4jæµ‹è¯•ç»“æŸ----------------------------------");
 		return "main";
 	}
 }
